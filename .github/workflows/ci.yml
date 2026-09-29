@@ -1,0 +1,62 @@
+name: Qmoosa FixFlow CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Serverpod CLI
+        run: dart pub global activate serverpod_cli 4.0.3
+
+      - name: Check Code Formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Serverpod Backend - Dependency & Analysis
+        run: |
+          if [ -d "qmoosa_fixflow_server" ]; then
+            cd qmoosa_fixflow_server
+            dart pub get
+            dart analyze --fatal-infos
+          fi
+
+      - name: Flutter App - Dependency & Analysis
+        run: |
+          if [ -d "qmoosa_fixflow_flutter" ]; then
+            cd qmoosa_fixflow_flutter
+            flutter pub get
+            flutter analyze
+          fi
+
+      - name: Run Backend Unit Tests
+        run: |
+          if [ -d "qmoosa_fixflow_server/test" ]; then
+            cd qmoosa_fixflow_server
+            dart test
+          fi
+
+      - name: Run Flutter Widget Tests
+        run: |
+          if [ -d "qmoosa_fixflow_flutter/test" ]; then
+            cd qmoosa_fixflow_flutter
+            flutter test
+          fi

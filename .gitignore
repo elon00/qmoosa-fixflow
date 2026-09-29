@@ -1,0 +1,24 @@
+# Serverpod
+**/config/passwords.yaml
+**/generated/
+.serverpod/
+
+# Flutter / Dart
+.dart_tool/
+.packages
+pubspec.lock
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak

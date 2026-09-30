@@ -19,6 +19,7 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
 import '../auth/email_idp_endpoint.dart' as _iuc1hd5t;
 import '../auth/jwt_refresh_endpoint.dart' as _inwq3ztq;
 import '../endpoints/activity_stream_endpoint.dart' as _icng23u3;
+import '../endpoints/ai_triage_endpoint.dart' as _iok4dn0a;
 import '../endpoints/dashboard_endpoint.dart' as _ibmx856o;
 import '../endpoints/issue_endpoint.dart' as _isyn1z06;
 import '../endpoints/sandbox_endpoint.dart' as _ie7tqwnd;
@@ -44,6 +45,12 @@ class Endpoints extends _is.EndpointDispatch {
         ..initialize(
           server,
           'activityStream',
+          null,
+        ),
+      'aiTriage': _iok4dn0a.AiTriageEndpoint()
+        ..initialize(
+          server,
+          'aiTriage',
           null,
         ),
       'dashboard': _ibmx856o.DashboardEndpoint()
@@ -304,6 +311,37 @@ class Endpoints extends _is.EndpointDispatch {
                         session,
                         params['workspaceId'],
                       ),
+        ),
+      },
+    );
+    connectors['aiTriage'] = _is.EndpointConnector(
+      name: 'aiTriage',
+      endpoint: endpoints['aiTriage']!,
+      methodConnectors: {
+        'analyzeReport': _is.MethodConnector(
+          name: 'analyzeReport',
+          params: {
+            'description': _is.ParameterDescription(
+              name: 'description',
+              type: _is.getType<String>(),
+              nullable: false,
+            ),
+            'photoUrl': _is.ParameterDescription(
+              name: 'photoUrl',
+              type: _is.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _is.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['aiTriage'] as _iok4dn0a.AiTriageEndpoint)
+                  .analyzeReport(
+                    session,
+                    description: params['description'],
+                    photoUrl: params['photoUrl'],
+                  ),
         ),
       },
     );

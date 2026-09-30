@@ -1,0 +1,34 @@
+# Render Blueprint for Qmoosa FixFlow (Serverpod 4 Backend + PostgreSQL)
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: qmoosa-fixflow-server
+    runtime: docker
+    dockerfilePath: qmoosa_fixflow_server/Dockerfile
+    dockerContext: .
+    plan: starter
+    region: oregon
+    healthCheckPath: /
+    envVars:
+      - key: runmode
+        value: production
+      - key: serverid
+        value: default
+      - key: logging
+        value: normal
+      - key: role
+        value: monolith
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        fromDatabase:
+          name: qmoosa-fixflow-postgres
+          property: connectionString
+
+databases:
+  - name: qmoosa-fixflow-postgres
+    databaseName: fixflow
+    user: fixflow_user
+    plan: free
+    region: oregon

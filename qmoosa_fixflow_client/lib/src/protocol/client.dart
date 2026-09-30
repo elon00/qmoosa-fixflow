@@ -21,6 +21,8 @@ import 'package:qmoosa_fixflow_client/src/protocol/issue_event.dart'
     as _ihw0pllu;
 import 'package:qmoosa_fixflow_client/src/protocol/simulate_result.dart'
     as _i9oyrv5p;
+import 'package:qmoosa_fixflow_client/src/protocol/triage_result.dart'
+    as _irr1jwpa;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _iacc;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
@@ -274,6 +276,29 @@ class EndpointActivityStream extends _isc.EndpointRef {
       );
 }
 
+/// Multimodal AI Agentic Triage Endpoint for automated hazard assessment,
+/// categorization, and severity prioritization.
+/// {@category Endpoint}
+class EndpointAiTriage extends _isc.EndpointRef {
+  EndpointAiTriage(_isc.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'aiTriage';
+
+  /// Analyze issue description and photographic evidence to triage maintenance urgency.
+  _ida.Future<_irr1jwpa.TriageResult> analyzeReport({
+    required String description,
+    String? photoUrl,
+  }) => caller.callServerEndpoint<_irr1jwpa.TriageResult>(
+    'aiTriage',
+    'analyzeReport',
+    {
+      'description': description,
+      'photoUrl': photoUrl,
+    },
+  );
+}
+
 /// Endpoint providing real-time facility metrics and operational KPI calculations.
 /// {@category Endpoint}
 class EndpointDashboard extends _isc.EndpointRef {
@@ -493,6 +518,7 @@ class Client extends _isc.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     activityStream = EndpointActivityStream(this);
+    aiTriage = EndpointAiTriage(this);
     dashboard = EndpointDashboard(this);
     issue = EndpointIssue(this);
     sandbox = EndpointSandbox(this);
@@ -505,6 +531,8 @@ class Client extends _isc.ServerpodClientShared {
   late final EndpointJwtRefresh jwtRefresh;
 
   late final EndpointActivityStream activityStream;
+
+  late final EndpointAiTriage aiTriage;
 
   late final EndpointDashboard dashboard;
 
@@ -521,6 +549,7 @@ class Client extends _isc.ServerpodClientShared {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'activityStream': activityStream,
+    'aiTriage': aiTriage,
     'dashboard': dashboard,
     'issue': issue,
     'sandbox': sandbox,

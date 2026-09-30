@@ -1,0 +1,13 @@
+### Result object returned by the Multimodal AI Agentic Triage engine
+class: TriageResult
+fields:
+  ### Suggested maintenance category (Plumbing, Electrical, HVAC, Structural, Safety, IT)
+  suggestedCategory: String
+  ### Suggested urgency priority (Low, Medium, High, Critical)
+  suggestedPriority: String
+  ### Confidence score between 0.0 and 1.0
+  confidence: double
+  ### Reasoning explanation from the agentic classifier
+  reasoning: String
+  ### Recommended safety or containment steps
+  immediateActions: List<String>

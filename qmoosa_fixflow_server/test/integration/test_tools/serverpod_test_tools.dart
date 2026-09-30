@@ -22,6 +22,8 @@ import 'package:qmoosa_fixflow_server/src/generated/issue_event.dart'
     as _i3h6rj0e;
 import 'package:qmoosa_fixflow_server/src/generated/simulate_result.dart'
     as _io0c4o1x;
+import 'package:qmoosa_fixflow_server/src/generated/triage_result.dart'
+    as _ibfot637;
 import 'package:serverpod/serverpod.dart' as _is;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _iacs;
@@ -165,6 +167,8 @@ class TestEndpoints {
 
   late final _ActivityStreamEndpoint activityStream;
 
+  late final _AiTriageEndpoint aiTriage;
+
   late final _DashboardEndpoint dashboard;
 
   late final _IssueEndpoint issue;
@@ -190,6 +194,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     activityStream = _ActivityStreamEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    aiTriage = _AiTriageEndpoint(
       endpoints,
       serializationManager,
     );
@@ -570,6 +578,52 @@ class _ActivityStreamEndpoint {
       _localTestStreamManager.outputStreamController,
     );
     return _localTestStreamManager.outputStreamController.stream;
+  }
+}
+
+class _AiTriageEndpoint {
+  _AiTriageEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _is.EndpointDispatch _endpointDispatch;
+
+  final _is.SerializationManager _serializationManager;
+
+  _ida.Future<_ibfot637.TriageResult> analyzeReport(
+    _ist.TestSessionBuilder sessionBuilder, {
+    required String description,
+    String? photoUrl,
+  }) async {
+    return _ist.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _ist.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'aiTriage',
+            method: 'analyzeReport',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'aiTriage',
+          methodName: 'analyzeReport',
+          parameters: _ist.testObjectToJson({
+            'description': description,
+            'photoUrl': photoUrl,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _ida.Future<_ibfot637.TriageResult>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
   }
 }
 

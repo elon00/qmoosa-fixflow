@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qmoosa_fixflow_client/qmoosa_fixflow_client.dart';
+import '../client.dart';
 import '../state/app_state.dart';
 
 class ReportIssueDialog extends StatefulWidget {
@@ -21,6 +23,8 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
   int _selectedLocationId = 1;
   String _selectedLocationName = 'Main Server Vault (Building A, B2)';
   bool _isSubmitting = false;
+  bool _isTriaging = false;
+  TriageResult? _triageResult;
 
   final _categories = [
     'Plumbing',
@@ -30,6 +34,7 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
     'Cleaning',
     'Safety',
     'IT & Access Control',
+    'General Facility',
   ];
 
   final _priorities = ['Low', 'Medium', 'High', 'Critical'];
@@ -40,6 +45,117 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
     {'id': 3, 'name': 'Cafeteria & Kitchen (Building B, Ground)'},
     {'id': 4, 'name': 'Residential Unit 304 (Sunset Wing)'},
   ];
+
+  Future<void> _runAiTriage() async {
+    final text = _descController.text.trim();
+    if (text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Please enter a description first to run AI Smart Triage.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isTriaging = true);
+    try {
+      final res = await client.aiTriage.analyzeReport(
+        description: text,
+        photoUrl: _photoController.text.trim(),
+      );
+      setState(() {
+        _triageResult = res;
+        if (_categories.contains(res.suggestedCategory)) {
+          _selectedCategory = res.suggestedCategory;
+        }
+        if (_priorities.contains(res.suggestedPriority)) {
+          _selectedPriority = res.suggestedPriority;
+        }
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'AI Triage completed: Suggested ${res.suggestedCategory} (${res.suggestedPriority}) with ${(res.confidence * 100).toInt()}% confidence.',
+            ),
+            backgroundColor: Colors.indigo,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('AI Triage error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isTriaging = false);
+    }
+  }
+
+  void _simulateQrScan() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.qr_code_scanner, color: Colors.indigo),
+            SizedBox(width: 8),
+            Text('Scan Physical Facility Tag'),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Simulating QR optical scan on fixture tag:'),
+            SizedBox(height: 8),
+            SelectableText(
+              'FIXFLOW://location/1?asset=PUMP-04',
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontWeight: FontWeight.bold,
+                color: Colors.indigo,
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              'Recognized Asset: High-Pressure Chilled Water Pump\nLocation: Main Server Vault (Building A, Basement 2)',
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              setState(() {
+                _selectedLocationId = 1;
+                _selectedLocationName = 'Main Server Vault (Building A, B2)';
+                _titleController.text =
+                    'Asset PUMP-04 Fault - Main Server Vault';
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Location auto-populated from QR tag!'),
+                  backgroundColor: Color(0xFF0D9488),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0D9488),
+            ),
+            child: const Text('Apply Location Tag'),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -86,7 +202,7 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 580, maxHeight: 720),
+        constraints: const BoxConstraints(maxWidth: 620, maxHeight: 760),
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Form(
@@ -120,18 +236,35 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Issue Title *',
-                    hintText:
-                        'e.g., Burst pipe spraying water under kitchen sink',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.title),
-                  ),
-                  validator: (v) => v == null || v.trim().isEmpty
-                      ? 'Title is required'
-                      : null,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Issue Title *',
+                          hintText: 'e.g., Water pipe burst under kitchen sink',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.title),
+                        ),
+                        validator: (v) => v == null || v.trim().isEmpty
+                            ? 'Title is required'
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    OutlinedButton.icon(
+                      onPressed: _simulateQrScan,
+                      icon: const Icon(Icons.qr_code_scanner, size: 18),
+                      label: const Text('Scan QR Tag'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 14,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -148,7 +281,85 @@ class _ReportIssueDialogState extends State<ReportIssueDialog> {
                       ? 'Description is required'
                       : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+                // AI Agentic Smart Triage trigger button
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: _isTriaging ? null : _runAiTriage,
+                    icon: _isTriaging
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(
+                            Icons.auto_awesome,
+                            size: 16,
+                            color: Colors.indigo,
+                          ),
+                    label: const Text(
+                      '✨ Run AI Smart Triage (Auto-detect Category & Urgency)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.indigo,
+                      ),
+                    ),
+                  ),
+                ),
+                if (_triageResult != null) ...[
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.indigo.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.indigo.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.psychology,
+                              size: 18,
+                              color: Colors.indigo,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'AI Analysis: ${_triageResult!.reasoning}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_triageResult!.immediateActions.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Immediate Containment Advice:',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ..._triageResult!.immediateActions.map(
+                            (a) => Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                '• $a',
+                                style: const TextStyle(fontSize: 11),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(

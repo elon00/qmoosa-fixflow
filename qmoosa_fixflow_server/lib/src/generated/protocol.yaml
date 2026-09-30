@@ -11,6 +11,8 @@ jwtRefresh:
   - refreshAccessToken:
 activityStream:
   - watchWorkspace:
+aiTriage:
+  - analyzeReport:
 dashboard:
   - getMetrics:
 issue:

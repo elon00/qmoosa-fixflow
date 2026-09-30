@@ -27,6 +27,7 @@ import 'issue.dart' as _i58ul4bz;
 import 'issue_attachment.dart' as _i72153m6;
 import 'issue_event.dart' as _ipzzltaw;
 import 'simulate_result.dart' as _iv4p93xy;
+import 'triage_result.dart' as _isk96bw6;
 import 'user_profile.dart' as _ir2mn8w1;
 import 'workspace.dart' as _io6eoug6;
 export 'dashboard_metrics.dart';
@@ -37,6 +38,7 @@ export 'issue.dart';
 export 'issue_attachment.dart';
 export 'issue_event.dart';
 export 'simulate_result.dart';
+export 'triage_result.dart';
 export 'user_profile.dart';
 export 'workspace.dart';
 export 'client.dart';
@@ -99,6 +101,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _iv4p93xy.SimulateResult) {
       return _iv4p93xy.SimulateResult.fromJson(data) as T;
     }
+    if (t == _isk96bw6.TriageResult) {
+      return _isk96bw6.TriageResult.fromJson(data) as T;
+    }
     if (t == _ir2mn8w1.UserProfile) {
       return _ir2mn8w1.UserProfile.fromJson(data) as T;
     }
@@ -133,6 +138,9 @@ class Protocol extends _isc.SerializationManager {
     if (t == _isc.getType<_iv4p93xy.SimulateResult?>()) {
       return (data != null ? _iv4p93xy.SimulateResult.fromJson(data) : null)
           as T;
+    }
+    if (t == _isc.getType<_isk96bw6.TriageResult?>()) {
+      return (data != null ? _isk96bw6.TriageResult.fromJson(data) : null) as T;
     }
     if (t == _isc.getType<_ir2mn8w1.UserProfile?>()) {
       return (data != null ? _ir2mn8w1.UserProfile.fromJson(data) : null) as T;
@@ -172,6 +180,7 @@ class Protocol extends _isc.SerializationManager {
       _i72153m6.IssueAttachment => 'IssueAttachment',
       _ipzzltaw.IssueEvent => 'IssueEvent',
       _iv4p93xy.SimulateResult => 'SimulateResult',
+      _isk96bw6.TriageResult => 'TriageResult',
       _ir2mn8w1.UserProfile => 'UserProfile',
       _io6eoug6.Workspace => 'Workspace',
       _ => null,
@@ -207,6 +216,8 @@ class Protocol extends _isc.SerializationManager {
         return 'IssueEvent';
       case _iv4p93xy.SimulateResult():
         return 'SimulateResult';
+      case _isk96bw6.TriageResult():
+        return 'TriageResult';
       case _ir2mn8w1.UserProfile():
         return 'UserProfile';
       case _io6eoug6.Workspace():
@@ -256,6 +267,9 @@ class Protocol extends _isc.SerializationManager {
     }
     if (dataClassName == 'SimulateResult') {
       return deserialize<_iv4p93xy.SimulateResult>(data['data']);
+    }
+    if (dataClassName == 'TriageResult') {
+      return deserialize<_isk96bw6.TriageResult>(data['data']);
     }
     if (dataClassName == 'UserProfile') {
       return deserialize<_ir2mn8w1.UserProfile>(data['data']);

@@ -32,7 +32,7 @@ class IssueEndpoint extends Endpoint {
     );
 
     // Broadcast creation to workspace streaming channel
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );
@@ -124,7 +124,7 @@ class IssueEndpoint extends Endpoint {
     );
 
     // Broadcast live event
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );
@@ -173,7 +173,7 @@ class IssueEndpoint extends Endpoint {
       ),
     );
 
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );
@@ -225,7 +225,7 @@ class IssueEndpoint extends Endpoint {
       ),
     );
 
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );
@@ -246,8 +246,7 @@ class IssueEndpoint extends Endpoint {
 
     if (current.status != 'AWAITING_VERIFICATION') {
       throw FixFlowException(
-        message:
-            'Cannot verify: Issue must be in AWAITING_VERIFICATION status.',
+        message: 'Cannot verify: Issue must be in AWAITING_VERIFICATION status.',
         statusCode: 400,
       );
     }
@@ -275,7 +274,7 @@ class IssueEndpoint extends Endpoint {
       ),
     );
 
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );
@@ -317,7 +316,7 @@ class IssueEndpoint extends Endpoint {
       ),
     );
 
-    session.messages.postMessage(
+    await session.messages.postMessage(
       'workspace_${saved.workspaceId}_issues',
       saved,
     );

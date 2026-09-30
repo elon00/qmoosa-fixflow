@@ -246,7 +246,8 @@ class IssueEndpoint extends Endpoint {
 
     if (current.status != 'AWAITING_VERIFICATION') {
       throw FixFlowException(
-        message: 'Cannot verify: Issue must be in AWAITING_VERIFICATION status.',
+        message:
+            'Cannot verify: Issue must be in AWAITING_VERIFICATION status.',
         statusCode: 400,
       );
     }

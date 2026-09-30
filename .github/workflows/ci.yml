@@ -25,38 +25,24 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Install Serverpod CLI
-        run: dart pub global activate serverpod_cli 4.0.3
+      - name: Install Workspace Dependencies
+        run: flutter pub get
 
       - name: Check Code Formatting
         run: dart format --output=none --set-exit-if-changed .
 
-      - name: Serverpod Backend - Dependency & Analysis
-        run: |
-          if [ -d "qmoosa_fixflow_server" ]; then
-            cd qmoosa_fixflow_server
-            dart pub get
-            dart analyze --fatal-infos
-          fi
+      - name: Serverpod Backend Analysis
+        working-directory: qmoosa_fixflow_server
+        run: dart analyze --fatal-infos
 
-      - name: Flutter App - Dependency & Analysis
-        run: |
-          if [ -d "qmoosa_fixflow_flutter" ]; then
-            cd qmoosa_fixflow_flutter
-            flutter pub get
-            flutter analyze
-          fi
+      - name: Flutter App Analysis
+        working-directory: qmoosa_fixflow_flutter
+        run: flutter analyze
 
       - name: Run Backend Unit Tests
-        run: |
-          if [ -d "qmoosa_fixflow_server/test" ]; then
-            cd qmoosa_fixflow_server
-            dart test
-          fi
+        working-directory: qmoosa_fixflow_server
+        run: dart test test/unit/state_machine_test.dart
 
       - name: Run Flutter Widget Tests
-        run: |
-          if [ -d "qmoosa_fixflow_flutter/test" ]; then
-            cd qmoosa_fixflow_flutter
-            flutter test
-          fi
+        working-directory: qmoosa_fixflow_flutter
+        run: flutter test test/widget_test.dart

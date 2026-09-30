@@ -1,0 +1,13 @@
+### Result output for automated sandbox test scenarios
+class: SimulateResult
+fields:
+  ### Whether the simulated scenario passed completely
+  success: bool
+  ### Name of the simulated scenario
+  scenario: String
+  ### High-level summary of outcome
+  summary: String
+  ### Detailed step-by-step logs from the Serverpod engine
+  logs: List<String>
+  ### Wall-clock execution time in milliseconds
+  executionTimeMs: int

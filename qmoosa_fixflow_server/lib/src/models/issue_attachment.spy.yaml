@@ -1,0 +1,16 @@
+### Evidence attachment (photographs, receipts, work orders)
+class: IssueAttachment
+table: issue_attachment
+fields:
+  ### Target issue ID
+  issueId: int
+  ### User who uploaded the file
+  uploadedBy: int
+  ### Storage URL
+  fileUrl: String
+  ### Attachment role: BEFORE_PHOTO, AFTER_PHOTO, INVOICE, DOCUMENT
+  attachmentType: String
+  ### Original filename
+  fileName: String
+  ### Upload timestamp
+  createdAt: DateTime

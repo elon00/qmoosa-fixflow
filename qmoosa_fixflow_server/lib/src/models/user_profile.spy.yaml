@@ -1,0 +1,18 @@
+### User profile for reporters, technicians, and facility managers
+class: UserProfile
+table: user_profile
+fields:
+  ### Serverpod Auth User ID
+  authUserId: int?
+  ### Human-readable display name
+  displayName: String
+  ### User email address
+  email: String
+  ### Role: 'reporter', 'technician', or 'manager'
+  role: String
+  ### Associated workspace
+  workspaceId: int
+  ### Avatar image URL or initial placeholder
+  avatarUrl: String?
+  ### Account creation timestamp
+  createdAt: DateTime

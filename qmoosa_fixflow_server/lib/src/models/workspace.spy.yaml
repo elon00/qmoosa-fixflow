@@ -1,0 +1,10 @@
+### Workspace representing a facility, building complex, or operational group
+class: Workspace
+table: workspace
+fields:
+  ### Name of the facility or workspace
+  name: String
+  ### Optional description
+  description: String?
+  ### Timestamp when the workspace was registered
+  createdAt: DateTime

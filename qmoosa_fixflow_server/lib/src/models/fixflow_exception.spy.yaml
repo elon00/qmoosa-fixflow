@@ -1,0 +1,7 @@
+### Custom serializable exception for FixFlow business logic violations
+exception: FixFlowException
+fields:
+  ### User-facing error message
+  message: String
+  ### HTTP status code equivalent
+  statusCode: int?

@@ -1,0 +1,11 @@
+name: _
+publish_to: none
+
+environment:
+  sdk: '^3.12.2'
+
+workspace:
+  - qmoosa_fixflow_client
+  - qmoosa_fixflow_server
+  - qmoosa_fixflow_flutter
+

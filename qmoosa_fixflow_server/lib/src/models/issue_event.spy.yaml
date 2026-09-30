@@ -1,0 +1,20 @@
+### Immutable audit trail and timeline event for issue lifecycle
+class: IssueEvent
+table: issue_event
+fields:
+  ### Target issue ID
+  issueId: int
+  ### User performing the action
+  actorId: int
+  ### Display name of the actor
+  actorName: String
+  ### Event type: CREATED, CLAIMED, STARTED, COMPLETED, VERIFIED, REOPENED, COMMENTED
+  eventType: String
+  ### Status prior to this event
+  fromStatus: String?
+  ### Status after this event
+  toStatus: String?
+  ### Narrative detail or comment text
+  message: String?
+  ### Timestamp of the event
+  createdAt: DateTime

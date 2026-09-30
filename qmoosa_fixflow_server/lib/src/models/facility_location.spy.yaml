@@ -1,0 +1,14 @@
+### Physical facility location (room, floor, wing)
+class: FacilityLocation
+table: facility_location
+fields:
+  ### Target workspace
+  workspaceId: int
+  ### Common location name (e.g. "Server Room B2", "Unit 401")
+  name: String
+  ### Building designation
+  building: String
+  ### Floor number or code
+  floor: String
+  ### Room number or identifier
+  room: String

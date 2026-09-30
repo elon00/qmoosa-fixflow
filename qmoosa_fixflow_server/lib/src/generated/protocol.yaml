@@ -1,0 +1,30 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+  - hasAccount:
+jwtRefresh:
+  - refreshAccessToken:
+activityStream:
+  - watchWorkspace:
+dashboard:
+  - getMetrics:
+issue:
+  - createIssue:
+  - getIssue:
+  - listIssues:
+  - claimIssue:
+  - startWork:
+  - completeWork:
+  - verifyResolution:
+  - reopenIssue:
+  - getIssueEvents:
+sandbox:
+  - runScenario:
+  - seedDemoData:
+greeting:
+  - hello:

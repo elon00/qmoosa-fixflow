@@ -1,0 +1,21 @@
+### Aggregated analytics object for facility operations
+class: DashboardMetrics
+fields:
+  ### Total count of tracked issues
+  totalIssues: int
+  ### Open / unassigned issues
+  openIssues: int
+  ### Issues currently claimed by technicians
+  assignedIssues: int
+  ### Issues actively being repaired
+  inProgressIssues: int
+  ### Issues pending reporter inspection
+  awaitingVerificationIssues: int
+  ### Successfully verified and closed issues
+  resolvedIssues: int
+  ### Average turnaround time in minutes
+  averageResolutionMinutes: double
+  ### Count of high priority tickets
+  highPriorityCount: int
+  ### Count of critical / emergency tickets
+  criticalPriorityCount: int

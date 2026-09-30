@@ -1,0 +1,40 @@
+### Core operational maintenance issue entity
+class: Issue
+table: issue
+fields:
+  ### Target workspace
+  workspaceId: int
+  ### User who submitted the report
+  reporterId: int
+  ### Reporter name cached for rapid feed rendering
+  reporterName: String
+  ### Assigned technician ID (null when OPEN)
+  assignedUserId: int?
+  ### Assigned technician display name
+  assignedUserName: String?
+  ### Concise issue headline
+  title: String
+  ### Detailed issue narrative
+  description: String
+  ### Category: Plumbing, Electrical, HVAC, Structural, Cleaning, Safety, IT
+  category: String
+  ### Associated facility location ID
+  locationId: int
+  ### Formatted location string (e.g., "Building A - Floor 2 - Room 204")
+  locationName: String
+  ### Priority level: Low, Medium, High, Critical
+  priority: String
+  ### State machine status: OPEN, ASSIGNED, IN_PROGRESS, AWAITING_VERIFICATION, RESOLVED, REOPENED
+  status: String
+  ### URL to the initial fault / damage photograph
+  beforePhotoUrl: String?
+  ### URL to the completion / repaired photograph
+  afterPhotoUrl: String?
+  ### Technician's closing explanation of work performed
+  resolutionNote: String?
+  ### Creation timestamp
+  createdAt: DateTime
+  ### Last state transition timestamp
+  updatedAt: DateTime
+  ### Timestamp when verified and closed
+  resolvedAt: DateTime?
